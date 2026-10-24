@@ -35,7 +35,7 @@ public class Span(public val start: Int, public val end: Int, public val text: S
 }
 
 /** The result of [Privacy.mask]: the masked text, and each placeholder's value (keep it on the device). */
-public class Masked(public val text: String, public val secrets: Map<String, String>)
+public class Masked(public val text: String, public val values: Map<String, String>)
 
 /**
  * The detector: load a model file once, then scan as many texts as you like. It holds no mutable
@@ -102,23 +102,23 @@ public class Privacy(bytes: ByteArray) {
         all.sortBy { it.start }
         val out = StringBuilder()
         val seen = HashMap<String, String>()
-        val secrets = LinkedHashMap<String, String>()
+        val values = LinkedHashMap<String, String>()
         var pos = 0
         var n = 0
         for (s in all) {
             if (s.start < pos) continue
-            val ph = seen.getOrPut(s.text) { placeholder(s.subtype, ++n).also { secrets[it] = s.text } }
+            val ph = seen.getOrPut(s.text) { placeholder(s.subtype, ++n).also { values[it] = s.text } }
             out.append(text, pos, s.start).append(ph)
             pos = s.end
         }
         out.append(text, pos, text.length)
-        return Masked(out.toString(), secrets)
+        return Masked(out.toString(), values)
     }
 
     /** Put the values back: the inverse of [mask] (e.g. on an AI's answer). */
-    public fun unmask(text: String, secrets: Map<String, String>): String {
+    public fun unmask(text: String, values: Map<String, String>): String {
         var out = text
-        for ((ph, value) in secrets) out = out.replace(ph, value)
+        for ((ph, value) in values) out = out.replace(ph, value)
         return out
     }
 

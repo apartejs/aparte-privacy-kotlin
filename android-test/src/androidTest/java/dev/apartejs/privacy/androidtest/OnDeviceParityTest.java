@@ -31,7 +31,7 @@ import dev.apartejs.privacy.Span;
 public class OnDeviceParityTest {
     @Test
     public void givesTheReferenceSpansOnAndroid() throws Exception {
-        Privacy secrets = Privacy.load();
+        Privacy privacy = Privacy.load();
         List<String> bad = new ArrayList<>();
         int texts = 0;
         long t0 = System.nanoTime();
@@ -44,7 +44,7 @@ public class OnDeviceParityTest {
                 JSONObject o = new JSONObject(line);
                 String text = o.getString("text");
                 JSONArray ref = o.getJSONArray("spans");
-                List<Span> mine = secrets.detect(text);
+                List<Span> mine = privacy.detect(text);
                 boolean same = mine.size() == ref.length();
                 for (int i = 0; same && i < ref.length(); i++) {
                     JSONObject s = ref.getJSONObject(i);
@@ -58,7 +58,7 @@ public class OnDeviceParityTest {
             }
         }
         double ms = (System.nanoTime() - t0) / 1e6;
-        Log.i("AparteSecrets", texts + " texts, " + String.format("%.1f", ms / texts) + " ms per text, " + bad.size() + " differ");
+        Log.i("ApartePrivacy", texts + " texts, " + String.format("%.1f", ms / texts) + " ms per text, " + bad.size() + " differ");
         assertTrue("no reference texts", texts > 0);
         assertTrue(bad.size() + " texts differ:\n" + bad, bad.isEmpty());
     }

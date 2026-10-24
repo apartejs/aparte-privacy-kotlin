@@ -1,8 +1,8 @@
 // Equality test: the Kotlin runtime must give exactly the spans of the Python reference implementation
 // (and of the JavaScript runtime), text by text: same text, same subtype, score within 2e-4.
 //
-// The references hold secret-shaped strings, so they are not in this repository: they are on Hugging
-// Face (https://huggingface.co/apartejs/aparte-privacy/tree/main). Point APARTE_PRIVACY_REFS
+// The references are synthetic texts with personal-data-shaped values, kept out of this repository: they
+// are on Hugging Face (https://huggingface.co/apartejs/aparte-privacy/tree/main). Point APARTE_PRIVACY_REFS
 // at a downloaded references_int8.jsonl; the test is reported as skipped otherwise.
 //
 //     APARTE_PRIVACY_REFS=references_int8.jsonl ./gradlew test
@@ -19,7 +19,7 @@ class ParityTest {
     fun givesTheReferenceSpans() {
         val path = System.getenv("APARTE_PRIVACY_REFS")
         assumeTrue(path != null, "set APARTE_PRIVACY_REFS to a references_int8.jsonl from Hugging Face")
-        val secrets = Privacy.load()
+        val privacy = Privacy.load()
         val bad = ArrayList<String>()
         var n = 0
         File(path!!).forEachLine(Charsets.UTF_8) { line ->
@@ -33,7 +33,7 @@ class ParityTest {
                 Triple(String(cps, (s["start"] as Double).toInt(), (s["end"] as Double).toInt() - (s["start"] as Double).toInt()),
                     s["subtype"] as String, s["score"] as Double)
             }
-            val mine = secrets.detect(text)
+            val mine = privacy.detect(text)
             val same = mine.size == ref.size && mine.indices.all { i ->
                 mine[i].text == ref[i].first && mine[i].subtype == ref[i].second && Math.abs(mine[i].score - ref[i].third) <= 2e-4
             }

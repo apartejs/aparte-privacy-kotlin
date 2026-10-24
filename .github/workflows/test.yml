@@ -1,7 +1,7 @@
 name: test
 on: [push, pull_request]
 
-# The equality references hold secret-shaped strings: they live on Hugging Face, not in this repository.
+# The equality references are synthetic texts with personal-data-shaped values: they live on Hugging Face, not in this repository.
 env:
   REFS_URL: https://huggingface.co/apartejs/aparte-privacy/resolve/main/references_int8.jsonl
 
@@ -55,4 +55,4 @@ jobs:
           disable-animations: true
           script: |
             ./gradlew -p android-test connectedDebugAndroidTest
-            adb logcat -d -s AparteSecrets:I
+            adb logcat -d -s ApartePrivacy:I

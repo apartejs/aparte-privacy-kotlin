@@ -48,6 +48,15 @@ class ApiTest {
     }
 
     @Test
+    fun maskAndUnmaskRoundTrip() {
+        val text = "Appelle Jean Dupont au 06 12 34 56 78 ou écris à jean.dupont@gmail.com"
+        val masked = privacy.mask(text)
+        assertTrue(!masked.text.contains("Jean Dupont") && !masked.text.contains("06 12 34 56 78"), masked.text)
+        assertEquals(3, masked.values.size)
+        assertEquals(text, privacy.unmask(masked.text, masked.values))
+    }
+
+    @Test
     fun rejectsAFileThatIsNotAModel() {
         assertFailsWith<PrivacyException> { Privacy("not a model".toByteArray()) }
     }
