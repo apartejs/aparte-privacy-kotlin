@@ -23,7 +23,7 @@ public class ModelHeader internal constructor(
     public val window: Int,
     public val stride: Int,
     public val unitLengthClasses: Int,
-    /** The kinds of secret the model tells apart: `password`, `api_key`, `token`, `private_key`, `other`. */
+    /** The categories the model tells apart: `private_person`, `private_address`, `private_email`, `private_phone`, `private_url`, `private_date`, `account_number`. */
     public val subtypes: List<String>,
     internal val byteIds: IntArray,
     internal val tensors: List<Tensor>,

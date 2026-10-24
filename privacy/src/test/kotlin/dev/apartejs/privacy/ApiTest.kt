@@ -25,8 +25,8 @@ class ApiTest {
 
     @Test
     fun findsANameWithItsKindAndOffsets() {
-        val text = "Appelle Marie Lambert au 06 12 34 56 78 demain"
-        val s = privacy.detect(text).firstOrNull { it.text.contains("Lambert") }
+        val text = "My name is John Smith and my email is john.smith@gmail.com"
+        val s = privacy.detect(text).firstOrNull { it.text == "John Smith" }
         assertNotNull(s, privacy.detect(text).toString())
         assertEquals("private_person", s.subtype)
         assertEquals(s.text, text.substring(s.start, s.end))
@@ -41,7 +41,7 @@ class ApiTest {
 
     @Test
     fun ignoreAndMinScoreAreAppliedAfterTheModel() {
-        val text = "Appelle Marie Lambert au 06 12 34 56 78 demain"
+        val text = "My name is John Smith and my email is john.smith@gmail.com"
         val value = privacy.detect(text).first { it.subtype == "private_person" }.text
         assertTrue(privacy.detect(text, ignore = listOf(value)).none { it.text == value })
         assertEquals(emptyList(), privacy.detect(text, minScore = 1.01))

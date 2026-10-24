@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    implementation("dev.apartejs:privacy:1.1.0")
+    implementation("dev.apartejs:privacy:1.0.0")
 }
 
 application {

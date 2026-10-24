@@ -1,13 +1,15 @@
-// aparte-secrets — finds passwords, API keys, tokens and private keys in text, on-device.
+// aparte-privacy — finds personal data in text, on-device: names, addresses, emails, phone numbers,
+// URLs, dates and account numbers.
 //
-// Reads the `.bin` model files published at https://huggingface.co/apartejs/aparte-secrets (format 1);
+// Reads the `.bin` model files published at https://huggingface.co/apartejs/aparte-privacy (format 1);
 // the int8 model is bundled. No dependency.
 //
-//     val secrets = Privacy.load()
-//     secrets.detect("the wifi password is Sunflower77# for the guests")
-//     // [Span(start=21, end=33, text=Sunflower77#, subtype=password, score=…)]
+//     val privacy = Privacy.load()
+//     privacy.detect("My name is John Smith and my email is john.smith@gmail.com")
+//     // [Span(start=11, end=21, text=John Smith, subtype=private_person, score=0.9999),
+//     //  Span(start=38, end=58, text=john.smith@gmail.com, subtype=private_email, score=0.9956)]
 //
-// It gives exactly the spans of the JavaScript runtime (@aparte/secrets on npm) and of the Python
+// It gives exactly the spans of the JavaScript runtime (@aparte/privacy on npm) and of the Python
 // reference implementation; the tests check it text by text.
 
 package dev.apartejs.privacy
@@ -16,11 +18,12 @@ import java.io.File
 import java.io.InputStream
 
 /**
- * A secret found in the text.
+ * A piece of personal data found in the text.
  *
  * @property start where it starts, as a UTF-16 index of the text (`text.substring(start, end)`).
  * @property end where it ends (exclusive), in the same units.
- * @property subtype `password`, `api_key`, `token`, `private_key` or `other`.
+ * @property subtype `private_person`, `private_address`, `private_email`, `private_phone`, `private_url`,
+ *   `private_date` or `account_number`.
  * @property score the model's confidence, from 0 to 1.
  */
 public class Span(public val start: Int, public val end: Int, public val text: String, public val subtype: String, public val score: Double) {
@@ -58,7 +61,7 @@ public class Privacy(bytes: ByteArray) {
     }
 
     /**
-     * Every secret found in the text, in text order. The model reports raw spans; [minScore] and
+     * Every piece of personal data found in the text, in text order. The model reports raw spans; [minScore] and
      * [ignore] (exact values) and [ignorePatterns] are the caller's policy, applied after it.
      */
     @JvmOverloads
@@ -74,7 +77,7 @@ public class Privacy(bytes: ByteArray) {
     }
 
     /**
-     * Replace every secret with a placeholder (`[PASSWORD_1]`, `[API_KEY_2]`…), reversibly. A value found
+     * Replace every value with a placeholder (`[PRIVATE_PERSON_1]`, `[PRIVATE_PHONE_2]`…), reversibly. A value found
      * once is masked everywhere it appears: the model may only flag the occurrence whose context gives it away.
      */
     @JvmOverloads
