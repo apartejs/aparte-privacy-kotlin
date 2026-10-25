@@ -15,7 +15,7 @@ class ApiTest {
     @Test
     fun readsTheModelHeader() {
         assertEquals("privacy", privacy.header.task)
-        assertEquals("1.0.0", privacy.header.version)
+        assertEquals("1.1.0", privacy.header.version)
         assertEquals("int8", privacy.header.precision)
         assertEquals(
             listOf("private_person", "private_address", "private_email", "private_phone", "private_url", "private_date", "account_number"),

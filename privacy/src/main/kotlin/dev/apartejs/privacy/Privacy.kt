@@ -6,8 +6,8 @@
 //
 //     val privacy = Privacy.load()
 //     privacy.detect("My name is John Smith and my email is john.smith@gmail.com")
-//     // [Span(start=11, end=21, text=John Smith, subtype=private_person, score=0.9999),
-//     //  Span(start=38, end=58, text=john.smith@gmail.com, subtype=private_email, score=0.9956)]
+//     // [Span(start=11, end=21, text=John Smith, subtype=private_person, score=1.0),
+//     //  Span(start=38, end=58, text=john.smith@gmail.com, subtype=private_email, score=1.0)]
 //
 // It gives exactly the spans of the JavaScript runtime (@aparte/privacy on npm) and of the Python
 // reference implementation; the tests check it text by text.
@@ -199,7 +199,7 @@ public class Privacy(bytes: ByteArray) {
 
     public companion object {
         /** The name of the bundled model file. */
-        public const val MODEL_FILE: String = "privacy-v1-int8.bin"
+        public const val MODEL_FILE: String = "privacy-v1.1-int8.bin"
 
         // An absolute path: it still resolves when R8 renames or moves this class.
         private const val RESOURCE = "/dev/apartejs/privacy/$MODEL_FILE"
